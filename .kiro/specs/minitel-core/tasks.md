@@ -13,16 +13,16 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
   - Create configuration files (tsconfig.json, package.json scripts)
   - _Requirements: 8.1_
 
-- [ ] 2. Implement core types and interfaces
-  - [ ] 2.1 Create Page interface in src/core/types.ts
+- [x] 2. Implement core types and interfaces
+  - [x] 2.1 Create Page interface in src/core/types.ts
     - Define Page type with content, pageNumber, totalPages, etc.
     - _Requirements: 1.1-1.4_
   
-  - [ ] 2.2 Create Service interface in src/core/types.ts
+  - [x] 2.2 Create Service interface in src/core/types.ts
     - Define Service type with code, title, description, render function
     - _Requirements: 5.1_
   
-  - [ ] 2.3 Create configuration interfaces
+  - [x] 2.3 Create configuration interfaces
     - Define PageConfig for dimensions and size limits
     - _Requirements: 8.1_
 
