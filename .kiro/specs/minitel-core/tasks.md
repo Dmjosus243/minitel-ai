@@ -27,17 +27,17 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
     - _Requirements: 8.1_
 
 - [ ] 3. Implement page transformer with size constraints
-  - [ ] 3.1 Implement formatText function in src/core/formatter.ts
+  - [x] 3.1 Implement formatText function in src/core/formatter.ts
     - Break text into 40-character lines with word wrapping
     - Handle paragraphs and special characters
     - _Requirements: 1.1, 1.2, 1.4, 1.5_
   
-  - [ ] 3.2 Implement pagination logic
+  - [x] 3.2 Implement pagination logic
     - Split content into 24-line pages
     - Add pagination metadata (page X of Y)
     - _Requirements: 1.3_
   
-  - [ ] 3.3 Implement pageWeight function
+  - [x] 3.3 Implement pageWeight function
     - Calculate UTF-8 byte size of pages
     - Ensure each page < 2048 bytes
     - _Requirements: 2.1, 2.2, 2.3_
