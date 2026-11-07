@@ -26,7 +26,7 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
     - Define PageConfig for dimensions and size limits
     - _Requirements: 8.1_
 
-- [ ] 3. Implement page transformer with size constraints
+- [x] 3. Implement page transformer with size constraints
   - [x] 3.1 Implement formatText function in src/core/formatter.ts
     - Break text into 40-character lines with word wrapping
     - Handle paragraphs and special characters
@@ -42,46 +42,46 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
     - Ensure each page < 2048 bytes
     - _Requirements: 2.1, 2.2, 2.3_
   
-  - [ ]* 3.4 Write property tests for page transformer
+  - [x] 3.4 Write property tests for page transformer
     - **Property 1: Line length constraint**
     - **Property 2: Page line count constraint**
     - **Property 3: Page size constraint**
     - **Validates: Requirements 1.1-1.3, 2.1-2.3**
     - Use fast-check to generate random text inputs
   
-  - [ ]* 3.5 Write unit tests for edge cases
+  - [x] 3.5 Write unit tests for edge cases
     - Test empty input, very long words, special characters
     - Test boundary conditions (exactly 40 chars, exactly 24 lines)
     - _Requirements: 1.5, 2.4_
 
-- [ ] 4. Implement service router with validation
-  - [ ] 4.1 Create service registry in src/core/router.ts
+- [x] 4. Implement service router with validation
+  - [x] 4.1 Create service registry in src/core/router.ts
     - Implement registerService and getService methods
     - Support dynamic registration without restart
     - _Requirements: 3.2, 8.2_
   
-  - [ ] 4.2 Implement service code validation
+  - [x] 4.2 Implement service code validation
     - Validate format "NNNN WORD" (4-digit number + uppercase descriptor)
     - Normalize to uppercase, trim whitespace
     - Reject invalid characters and duplicates
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
   
-  - [ ] 4.3 Implement route function
+  - [x] 4.3 Implement route function
     - Map service codes to service endpoints
     - Handle unknown codes with "Service not found" message
     - _Requirements: 3.1, 3.3_
   
-  - [ ]* 4.4 Write property tests for service router
+  - [x]* 4.4 Write property tests for service router
     - **Property 4: Code normalization consistency**
     - **Validates: Requirements 5.1, 5.3**
   
-  - [ ]* 4.5 Write unit tests for router
+  - [x]* 4.5 Write unit tests for router
     - Test valid/invalid codes, duplicate registration
     - Test error cases and edge conditions
     - _Requirements: 5.2, 5.4_
 
 - [ ] 5. Implement homepage generator
-  - [ ] 5.1 Create Homepage_Generator in src/services/home.ts
+  - [x] 5.1 Create Homepage_Generator in src/services/home.ts
     - Generate numbered menu from registered services
     - Include service descriptions when available
     - Update automatically when services change
