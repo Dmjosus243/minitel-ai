@@ -13,7 +13,12 @@ import type { Service } from './types';
 const ASCII_LETTERS = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 const descriptorArbitrary = fc
-  .array(fc.constantFrom(...ASCII_LETTERS), { minLength: 1, maxLength: 20 })
+  .array(
+    fc
+      .tuple(fc.constantFrom(...ASCII_LETTERS), fc.boolean())
+      .map(([letter, lowercase]) => (lowercase ? letter.toLowerCase() : letter)),
+    { minLength: 1, maxLength: 20 },
+  )
   .map((letters) => letters.join(''));
 
 const optionalWhitespaceArbitrary = fc
@@ -28,14 +33,17 @@ const validServiceCodeArbitrary = fc
   .record({
     number: fc.integer({ min: 0, max: 9999 }),
     descriptor: descriptorArbitrary,
-    lowercase: fc.boolean(),
     leadingWhitespace: optionalWhitespaceArbitrary,
     separator: requiredWhitespaceArbitrary,
     trailingWhitespace: optionalWhitespaceArbitrary,
   })
-  .map(({ number, descriptor, lowercase, leadingWhitespace, separator, trailingWhitespace }) => {
-    const casedDescriptor = lowercase ? descriptor.toLowerCase() : descriptor;
-    return `${leadingWhitespace}${number.toString().padStart(4, '0')}${separator}${casedDescriptor}${trailingWhitespace}`;
+  .map(({ number, descriptor, leadingWhitespace, separator, trailingWhitespace }) => {
+    const paddedNumber = number.toString().padStart(4, '0');
+
+    return {
+      input: `${leadingWhitespace}${paddedNumber}${separator}${descriptor}${trailingWhitespace}`,
+      expected: `${paddedNumber} ${descriptor.toUpperCase()}`,
+    };
   });
 
 function service(code: string, content = 'Contenu du service'): Service {
@@ -72,12 +80,13 @@ describe('service code normalization', () => {
     expect(() => normalizeCode(null as unknown as string)).toThrow(/Invalid service code/u);
   });
 
-  it('Feature: minitel-core, Property 5: Code Normalization Consistency', () => {
+  it('Feature: minitel-core, Property 4: Code Normalization Consistency', () => {
     /** **Validates: Requirements 5.1, 5.3** */
     fc.assert(
-      fc.property(validServiceCodeArbitrary, (code) => {
-        const normalized = normalizeCode(code);
+      fc.property(validServiceCodeArbitrary, ({ input, expected }) => {
+        const normalized = normalizeCode(input);
 
+        expect(normalized).toBe(expected);
         expect(normalized).toMatch(/^\d{4} [A-Z]+$/u);
         expect(normalizeCode(normalized)).toBe(normalized);
       }),

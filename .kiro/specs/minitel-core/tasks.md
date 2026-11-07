@@ -71,11 +71,11 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
     - Handle unknown codes with "Service not found" message
     - _Requirements: 3.1, 3.3_
   
-  - [x]* 4.4 Write property tests for service router
+  - [x] 4.4 Write property tests for service router
     - **Property 4: Code normalization consistency**
     - **Validates: Requirements 5.1, 5.3**
   
-  - [x]* 4.5 Write unit tests for router
+  - [x] 4.5 Write unit tests for router
     - Test valid/invalid codes, duplicate registration
     - Test error cases and edge conditions
     - _Requirements: 5.2, 5.4_
