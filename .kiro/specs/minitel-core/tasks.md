@@ -80,19 +80,19 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
     - Test error cases and edge conditions
     - _Requirements: 5.2, 5.4_
 
-- [ ] 5. Implement homepage generator
+- [x] 5. Implement homepage generator
   - [x] 5.1 Create Homepage_Generator in src/services/home.ts
     - Generate numbered menu from registered services
     - Include service descriptions when available
     - Update automatically when services change
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
   
-  - [ ] 5.2 Implement menu customization
+  - [x] 5.2 Implement menu customization
     - Allow configuration of layout and styling
     - Support different menu formats
     - _Requirements: 8.3_
   
-  - [ ]* 5.3 Write tests for homepage generator
+  - [x] 5.3 Write tests for homepage generator
     - Test menu generation with varying numbers of services
     - Test description inclusion and formatting
     - _Requirements: 4.1-4.4_
