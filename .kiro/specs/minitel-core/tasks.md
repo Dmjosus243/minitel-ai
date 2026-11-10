@@ -122,7 +122,7 @@ The Minitel AI Core Engine transforms text content into 40-column by 24-line pag
     - _Requirements: 6.1-6.4_
 
 - [ ] 8. Implement web server and API
-  - [ ] 8.1 Create Hono server in src/server.ts
+  - [x] 8.1 Create Hono server in src/server.ts
     - Set up routes for service codes and homepage
     - _Requirements: 3.1, 4.2_
   
