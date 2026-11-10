@@ -1,6 +1,10 @@
 import { serve } from '@hono/node-server';
 
+import { registerService } from './core/router';
 import app from './server';
+import { aideService } from './services/aide';
+
+registerService(aideService);
 
 export const PORT = 3000;
 
