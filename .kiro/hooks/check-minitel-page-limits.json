@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Contrôle des limites Minitel",
+      "trigger": "PostFileSave",
+      "description": "Contrôle les pages de tous les services et de l’accueil après une sauvegarde sous src/services/, puis échoue avec le détail de chaque dépassement.",
+      "matcher": "src[\\\\/]services[\\\\/].*",
+      "action": {
+        "type": "command",
+        "command": "npx --no-install tsx -e 'import { readdir } from \"node:fs/promises\"; import { resolve } from \"node:path\"; import { pathToFileURL } from \"node:url\"; import { formatText, pageWeight } from \"./src/core/formatter\"; import { generateHomepage } from \"./src/services/home\"; void (async () => { const directory = resolve(\"src/services\"); const files = (await readdir(directory)).filter((file) => file.endsWith(\".ts\") && !file.endsWith(\".test.ts\")); const services = []; for (const file of files) { const exports = await import(pathToFileURL(resolve(directory, file)).href); for (const candidate of Object.values(exports)) { if (candidate && typeof candidate === \"object\" && typeof candidate.code === \"string\" && typeof candidate.title === \"string\" && typeof candidate.render === \"function\") services.push(candidate); } } const checks = []; for (const service of services) checks.push([service.code, formatText(await service.render())]); checks.push([\"ACCUEIL\", generateHomepage(services)]); const violations = []; for (const [label, pages] of checks) { for (const page of pages) { const bytes = pageWeight(page); if (bytes >= 2048) violations.push(`${label}, page ${page.pageNumber}: ${bytes} octets (limite stricte: 2048)`); page.content.forEach((line, index) => { const columns = Array.from(line).length; if (columns > 40) violations.push(`${label}, page ${page.pageNumber}, ligne ${index + 1}: ${columns} colonnes (limite: 40)`); }); } } if (violations.length > 0) { console.error(\"Dépassement des limites Minitel :\\n\" + violations.join(\"\\n\")); process.exitCode = 1; } else { console.log(\"Pages Minitel conformes : moins de 2 Ko et 40 colonnes maximum.\"); } })().catch((error) => { console.error(\"Vérification des pages impossible :\", error); process.exitCode = 1; });'",
+        "timeout": 120
+      }
+    }
+  ]
+}

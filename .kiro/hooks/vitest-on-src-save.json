@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Vitest sur sauvegarde TypeScript",
+      "trigger": "PostFileSave",
+      "description": "Lance toute la suite Vitest après la sauvegarde d’un fichier TypeScript sous src/.",
+      "matcher": "src[\\\\/].*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "npx vitest run",
+        "timeout": 180
+      }
+    }
+  ]
+}
