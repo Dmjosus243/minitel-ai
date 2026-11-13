@@ -1,3 +1,6 @@
+import { Console } from 'node:console';
+import { Writable } from 'node:stream';
+
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
@@ -6,6 +9,7 @@ import {
   normalizeCode,
   registerService,
   route,
+  SERVICE_UNAVAILABLE_MESSAGE,
   ServiceRegistry,
 } from './router';
 import type { Service } from './types';
@@ -153,18 +157,35 @@ describe('ServiceRegistry', () => {
     expect(pages[0]?.content).toEqual(['Service not found']);
   });
 
-  it('propagates rendering errors without hiding their cause', async () => {
-    const registry = new ServiceRegistry();
+  it('logs an unreachable service error and returns a temporary-unavailable page', async () => {
+    /** **Validates: Requirements 3.4, 6.2** */
+    let loggedOutput = '';
+    const output = new Writable({
+      write(chunk, _encoding, callback) {
+        loggedOutput += chunk.toString();
+        callback();
+      },
+    });
+    const logger = new Console({ stdout: output, stderr: output });
+    const registry = new ServiceRegistry(logger);
     const failingService: Service = {
       code: '3615 FAILURE',
       title: 'Failure',
       async render() {
-        throw new Error('render failed');
+        throw new Error('service endpoint unreachable');
       },
     };
     registry.register(failingService);
 
-    await expect(registry.route('3615 FAILURE')).rejects.toThrow('render failed');
+    const pages = await registry.route('3615 FAILURE');
+
+    expect(pages).toMatchObject([
+      { content: [SERVICE_UNAVAILABLE_MESSAGE] },
+    ]);
+    expect(loggedOutput).toContain(
+      'Service routing failed for 3615 FAILURE.',
+    );
+    expect(loggedOutput).toContain('service endpoint unreachable');
   });
 });
 

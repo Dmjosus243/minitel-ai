@@ -138,3 +138,44 @@ describe('page transformer edge cases', () => {
     expect(pageWeight(pages[0])).toBeLessThan(maxBytes);
   });
 });
+
+describe('page transformer error handling and resilience', () => {
+  it.each([
+    ['null', null],
+    ['undefined', undefined],
+    ['a number', 42],
+    ['an object', { content: 'Text' }],
+    ['an array', ['Text']],
+  ])('returns a descriptive page for malformed %s input', (_label, input) => {
+    /** **Validates: Requirements 6.1** */
+    const pages = formatText(input as unknown as string);
+
+    expect(pages).toHaveLength(1);
+    expect(pages[0]?.content).toEqual([
+      'Invalid text input: expected a string.',
+    ]);
+    expect(pages[0]?.metadata.byteSize).toBe(pageWeight(pages[0]));
+    expect(pages[0]?.metadata.byteSize).toBeLessThan(
+      DEFAULT_PAGE_CONFIG.maxBytes,
+    );
+  });
+
+  it('falls back to safe defaults when requested resource limits cannot fit a page', () => {
+    /** **Validates: Requirements 6.4** */
+    const pages = formatText('Content', {
+      ...DEFAULT_PAGE_CONFIG,
+      maxBytes: 1,
+    });
+    const message = pages.flatMap(({ content }) => content).join(' ');
+
+    expect(message).toContain(
+      'Unable to format content with the requested resource limits.',
+    );
+    for (const page of pages) {
+      expect(page.metadata.byteSize).toBe(pageWeight(page));
+      expect(page.metadata.byteSize).toBeLessThan(
+        DEFAULT_PAGE_CONFIG.maxBytes,
+      );
+    }
+  });
+});

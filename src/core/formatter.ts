@@ -1,11 +1,151 @@
+import { performance } from 'node:perf_hooks';
+
+import {
+  DEFAULT_PAGE_CONFIG,
+  getPageConfig,
+  resolvePageConfig,
+} from './config';
+import { responseTimeMonitor } from './performance';
 import type { Page, PageConfig } from './types';
 
-export const DEFAULT_PAGE_CONFIG: Readonly<PageConfig> = Object.freeze({
-  columns: 40,
-  rows: 24,
-  maxBytes: 2048,
-  wordWrap: true,
-});
+export { DEFAULT_PAGE_CONFIG } from './config';
+
+export const PAGE_CACHE_CAPACITY = 100;
+
+export interface PageCacheStats {
+  entries: number;
+  capacity: number;
+  hits: number;
+  misses: number;
+}
+
+export interface PageTransformerPlugin {
+  readonly name: string;
+  transform(text: string, config: Readonly<PageConfig>): string;
+}
+
+const transformedPageCache = new Map<string, Page[]>();
+const pageTransformerPlugins = new Map<string, PageTransformerPlugin>();
+let pageCacheHits = 0;
+let pageCacheMisses = 0;
+let pageTransformerRevision = 0;
+
+function clonePages(pages: readonly Page[]): Page[] {
+  return pages.map((page) => ({
+    ...page,
+    content: [...page.content],
+    metadata: { ...page.metadata },
+  }));
+}
+
+function pageCacheKey(text: string, config: PageConfig): string {
+  return JSON.stringify([
+    text,
+    config.columns,
+    config.rows,
+    config.maxBytes,
+    config.wordWrap,
+    pageTransformerRevision,
+  ]);
+}
+
+function readCachedPages(key: string): Page[] | null {
+  const cachedPages = transformedPageCache.get(key);
+
+  if (cachedPages === undefined) {
+    pageCacheMisses += 1;
+    return null;
+  }
+
+  // Reinsert the entry so iteration order tracks least-recently-used entries.
+  transformedPageCache.delete(key);
+  transformedPageCache.set(key, cachedPages);
+  pageCacheHits += 1;
+  return clonePages(cachedPages);
+}
+
+function cachePages(key: string, pages: readonly Page[]): void {
+  if (transformedPageCache.size >= PAGE_CACHE_CAPACITY) {
+    const oldestKey = transformedPageCache.keys().next().value as string | undefined;
+    if (oldestKey !== undefined) {
+      transformedPageCache.delete(oldestKey);
+    }
+  }
+
+  transformedPageCache.set(key, clonePages(pages));
+}
+
+export function getPageCacheStats(): PageCacheStats {
+  return {
+    entries: transformedPageCache.size,
+    capacity: PAGE_CACHE_CAPACITY,
+    hits: pageCacheHits,
+    misses: pageCacheMisses,
+  };
+}
+
+export function clearPageCache(): void {
+  transformedPageCache.clear();
+  pageCacheHits = 0;
+  pageCacheMisses = 0;
+}
+
+/** Enregistre une extension de texte appliquée avant la mise en page. */
+export function registerPageTransformer(
+  plugin: PageTransformerPlugin,
+): () => void {
+  if (
+    typeof plugin !== 'object'
+    || plugin === null
+    || typeof plugin.name !== 'string'
+    || plugin.name.trim().length === 0
+    || typeof plugin.transform !== 'function'
+  ) {
+    throw new TypeError(
+      'Page transformer plugins require a name and transform function.',
+    );
+  }
+
+  const name = plugin.name.trim();
+  if (pageTransformerPlugins.has(name)) {
+    throw new Error(`Duplicate page transformer plugin: ${name}.`);
+  }
+
+  pageTransformerPlugins.set(name, plugin);
+  pageTransformerRevision += 1;
+  clearPageCache();
+
+  return () => {
+    unregisterPageTransformer(name);
+  };
+}
+
+export function unregisterPageTransformer(name: string): boolean {
+  const removed = pageTransformerPlugins.delete(name.trim());
+
+  if (removed) {
+    pageTransformerRevision += 1;
+    clearPageCache();
+  }
+
+  return removed;
+}
+
+function applyPageTransformers(text: string, config: PageConfig): string {
+  let transformedText = text;
+  const pluginConfig = Object.freeze({ ...config });
+
+  for (const plugin of pageTransformerPlugins.values()) {
+    transformedText = plugin.transform(transformedText, pluginConfig);
+    if (typeof transformedText !== 'string') {
+      throw new TypeError(
+        `Page transformer plugin ${plugin.name} must return a string.`,
+      );
+    }
+  }
+
+  return transformedText;
+}
 
 const MINITEL_EQUIVALENTS: ReadonlyArray<readonly [string, string]> = [
   ['\u00a0', ' '],
@@ -30,21 +170,9 @@ const MINITEL_EQUIVALENTS: ReadonlyArray<readonly [string, string]> = [
 ];
 
 function resolveConfig(config?: PageConfig): PageConfig {
-  const resolved = { ...DEFAULT_PAGE_CONFIG, ...config };
-
-  if (!Number.isInteger(resolved.columns) || resolved.columns < 1) {
-    throw new RangeError('Page columns must be a positive integer.');
-  }
-
-  if (!Number.isInteger(resolved.rows) || resolved.rows < 1) {
-    throw new RangeError('Page rows must be a positive integer.');
-  }
-
-  if (!Number.isInteger(resolved.maxBytes) || resolved.maxBytes < 1) {
-    throw new RangeError('Page maxBytes must be a positive integer.');
-  }
-
-  return resolved;
+  return config === undefined
+    ? getPageConfig()
+    : resolvePageConfig(config);
 }
 
 function convertSpecialCharacters(text: string): string {
@@ -289,8 +417,46 @@ function paginate(lines: string[], config: PageConfig): Page[] {
   }
 }
 
+function formatErrorPage(message: string): Page[] {
+  const safeConfig = { ...DEFAULT_PAGE_CONFIG };
+  return paginate(wrapText(message, safeConfig), safeConfig);
+}
+
 export function formatText(text: string, config?: PageConfig): Page[] {
-  const resolvedConfig = resolveConfig(config);
-  const lines = wrapText(text, resolvedConfig);
-  return paginate(lines, resolvedConfig);
+  const startedAt = performance.now();
+
+  try {
+    if (typeof text !== 'string') {
+      return formatErrorPage('Invalid text input: expected a string.');
+    }
+
+    try {
+      const resolvedConfig = resolveConfig(config);
+      const cacheKey = pageCacheKey(text, resolvedConfig);
+      const cachedPages = readCachedPages(cacheKey);
+
+      if (cachedPages !== null) {
+        return cachedPages;
+      }
+
+      const transformedText = applyPageTransformers(text, resolvedConfig);
+      const lines = wrapText(transformedText, resolvedConfig);
+      const pages = paginate(lines, resolvedConfig);
+      cachePages(cacheKey, pages);
+      return pages;
+    } catch (error) {
+      if (error instanceof RangeError) {
+        return formatErrorPage(
+          `Unable to format content with the requested resource limits. ${error.message}`,
+        );
+      }
+
+      throw error;
+    }
+  } finally {
+    responseTimeMonitor.record(
+      'pageTransformation',
+      performance.now() - startedAt,
+    );
+  }
 }

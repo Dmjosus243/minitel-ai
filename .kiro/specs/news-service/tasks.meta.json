@@ -1,0 +1,474 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Create `src/services/news/types.ts`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527631258
+      },
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527651021
+      },
+      {
+        "executionId": "06cb94da-19e9-4d32-909f-4ef1838fa1dc",
+        "chatSessionId": "sess_0d4c1c92-e49e-40b0-a331-52e1f5840e4f",
+        "timestamp": 1794604195518
+      }
+    ],
+    "1.2 Create `src/services/news/config.ts`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527631618
+      },
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527651780
+      },
+      {
+        "executionId": "06cb94da-19e9-4d32-909f-4ef1838fa1dc",
+        "chatSessionId": "sess_0d4c1c92-e49e-40b0-a331-52e1f5840e4f",
+        "timestamp": 1794604195771
+      }
+    ],
+    "1.3 Add configuration unit tests": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527631856
+      },
+      {
+        "executionId": "06cb94da-19e9-4d32-909f-4ef1838fa1dc",
+        "chatSessionId": "sess_0d4c1c92-e49e-40b0-a331-52e1f5840e4f",
+        "timestamp": 1794604196004
+      }
+    ],
+    "1.4 Add the property test for Property 1: Summary Mode Selection": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527632172
+      },
+      {
+        "executionId": "06cb94da-19e9-4d32-909f-4ef1838fa1dc",
+        "chatSessionId": "sess_0d4c1c92-e49e-40b0-a331-52e1f5840e4f",
+        "timestamp": 1794604196256
+      }
+    ],
+    "2.1 Add one lightweight RSS/XML parser dependency": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527632433
+      },
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794608713922
+      }
+    ],
+    "2.2 Create the bounded RSS transport in `src/services/news/rss-provider.ts`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527632724
+      },
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794608721684
+      }
+    ],
+    "2.3 Implement safe RSS 2.0 parsing and NewsItem normalization": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527633242
+      },
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794608724745
+      }
+    ],
+    "2.4 Add RSS provider unit tests with injected byte streams and parser fixtures": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527633447
+      },
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794608727813
+      }
+    ],
+    "2.5 Add the property test for Property 2: RSS Item Filtering, Order, and Limit": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527633666
+      },
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794608731620
+      }
+    ],
+    "3.1 Create the deterministic extractive strategy in `src/services/news/summarizers.ts`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527633970
+      },
+      {
+        "executionId": "4066ca85-95e6-4076-b963-ecc73396f9bd",
+        "chatSessionId": "sess_e5bea732-4fac-4cab-a19a-a0d5d9351661",
+        "timestamp": 1794608756037
+      },
+      {
+        "executionId": "4066ca85-95e6-4076-b963-ecc73396f9bd",
+        "chatSessionId": "sess_e5bea732-4fac-4cab-a19a-a0d5d9351661",
+        "timestamp": 1794608922029
+      }
+    ],
+    "3.2 Implement the injected HTTP AI summary client": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527634374
+      },
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794609358585
+      }
+    ],
+    "3.3 Implement the resilient AI wrapper and mode factory": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527634773
+      },
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794609361496
+      }
+    ],
+    "3.4 Add summarizer unit tests": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527635118
+      },
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794609364439
+      }
+    ],
+    "3.5 Add the property test for Property 3: Extractive Prefix Preservation": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527635571
+      },
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794609371171
+      }
+    ],
+    "3.6 Add the property test for Property 6: AI Failure Equivalence": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527635942
+      },
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794609374160
+      }
+    ],
+    "4.1 Create pure presentation helpers in `src/services/news/presenter.ts`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527636280
+      },
+      {
+        "executionId": "66849d2b-335f-48bd-85cb-e7f48e592519",
+        "chatSessionId": "sess_99998d9e-68a7-4ddd-aa36-e5cfefd833c6",
+        "timestamp": 1794610479002
+      }
+    ],
+    "4.2 Implement `fitArticleBlock()` against the existing formatter": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527636916
+      },
+      {
+        "executionId": "66849d2b-335f-48bd-85cb-e7f48e592519",
+        "chatSessionId": "sess_99998d9e-68a7-4ddd-aa36-e5cfefd833c6",
+        "timestamp": 1794610479793
+      }
+    ],
+    "4.3 Add presenter and fitter unit tests": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527637988
+      },
+      {
+        "executionId": "66849d2b-335f-48bd-85cb-e7f48e592519",
+        "chatSessionId": "sess_99998d9e-68a7-4ddd-aa36-e5cfefd833c6",
+        "timestamp": 1794610480093
+      }
+    ],
+    "4.4 Add the property test for Property 4: Article Block Fit": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527638485
+      },
+      {
+        "executionId": "66849d2b-335f-48bd-85cb-e7f48e592519",
+        "chatSessionId": "sess_99998d9e-68a7-4ddd-aa36-e5cfefd833c6",
+        "timestamp": 1794610480407
+      }
+    ],
+    "5.1 Create `src/services/news.ts` and `createNewsService()`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527638732
+      },
+      {
+        "executionId": "63bf2eac-786f-4680-b267-62e838213efd",
+        "chatSessionId": "sess_05ffd0d7-3030-499f-a8ec-8943def4fb3e",
+        "timestamp": 1794610940040
+      }
+    ],
+    "5.2 Implement exact source-failure mapping": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527639001
+      },
+      {
+        "executionId": "63bf2eac-786f-4680-b267-62e838213efd",
+        "chatSessionId": "sess_05ffd0d7-3030-499f-a8ec-8943def4fb3e",
+        "timestamp": 1794610940915
+      }
+    ],
+    "5.3 Add service unit tests": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527639326
+      },
+      {
+        "executionId": "63bf2eac-786f-4680-b267-62e838213efd",
+        "chatSessionId": "sess_05ffd0d7-3030-499f-a8ec-8943def4fb3e",
+        "timestamp": 1794610945187
+      }
+    ],
+    "5.4 Add the property test for Property 7: Source Failure Mapping": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527639677
+      },
+      {
+        "executionId": "63bf2eac-786f-4680-b267-62e838213efd",
+        "chatSessionId": "sess_05ffd0d7-3030-499f-a8ec-8943def4fb3e",
+        "timestamp": 1794610945471
+      }
+    ],
+    "6.1 Compose production dependencies from environment configuration": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527640033
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611632894
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611735381
+      }
+    ],
+    "6.2 Register `newsService` in `src/index.ts`": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527640485
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611742192
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611840967
+      }
+    ],
+    "6.3 Document runtime configuration": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527640803
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611745064
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611844270
+      }
+    ],
+    "7.1 Test code and menu integration": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527641145
+      },
+      {
+        "executionId": "af8460a1-4ed0-4d23-98b6-808aae6c67f1",
+        "chatSessionId": "sess_15900904-795d-498e-8aac-948c20136d15",
+        "timestamp": 1794612227695
+      }
+    ],
+    "7.2 Add the property test for Property 5: Routed Page Constraints": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527641683
+      },
+      {
+        "executionId": "af8460a1-4ed0-4d23-98b6-808aae6c67f1",
+        "chatSessionId": "sess_15900904-795d-498e-8aac-948c20136d15",
+        "timestamp": 1794612230816
+      }
+    ],
+    "7.3 Test the Hono endpoint with mocked external boundaries": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527642070
+      },
+      {
+        "executionId": "af8460a1-4ed0-4d23-98b6-808aae6c67f1",
+        "chatSessionId": "sess_15900904-795d-498e-8aac-948c20136d15",
+        "timestamp": 1794612233765
+      }
+    ],
+    "8. Checkpoint - Validate the complete feature": [
+      {
+        "executionId": "43d956b9-f591-4e5d-bba3-cf897783bc21",
+        "chatSessionId": "sess_69aef28d-a742-47f1-a543-0897ab1659b7",
+        "timestamp": 1794527642475
+      }
+    ],
+    "1. Define news domain types and configuration": [
+      {
+        "executionId": "06cb94da-19e9-4d32-909f-4ef1838fa1dc",
+        "chatSessionId": "sess_0d4c1c92-e49e-40b0-a331-52e1f5840e4f",
+        "timestamp": 1794603932080
+      },
+      {
+        "executionId": "06cb94da-19e9-4d32-909f-4ef1838fa1dc",
+        "chatSessionId": "sess_0d4c1c92-e49e-40b0-a331-52e1f5840e4f",
+        "timestamp": 1794604174801
+      }
+    ],
+    "2. Implement bounded RSS acquisition and normalization": [
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794604260392
+      },
+      {
+        "executionId": "e3435862-7738-4ecc-acf9-61b3e8bf162b",
+        "chatSessionId": "sess_963baaac-a4f0-4d28-839f-043efaf76074",
+        "timestamp": 1794608683488
+      }
+    ],
+    "3. Implement extractive and AI summarizers": [
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794608942881
+      },
+      {
+        "executionId": "08e502b1-ca3c-495a-a7cb-4fa9528e835d",
+        "chatSessionId": "sess_8e9e9395-1e56-4385-838f-cc1801e4800e",
+        "timestamp": 1794609342832
+      }
+    ],
+    "4. Implement sanitization, article fitting, and news presentation": [
+      {
+        "executionId": "66849d2b-335f-48bd-85cb-e7f48e592519",
+        "chatSessionId": "sess_99998d9e-68a7-4ddd-aa36-e5cfefd833c6",
+        "timestamp": 1794609962348
+      },
+      {
+        "executionId": "66849d2b-335f-48bd-85cb-e7f48e592519",
+        "chatSessionId": "sess_99998d9e-68a7-4ddd-aa36-e5cfefd833c6",
+        "timestamp": 1794610460790
+      }
+    ],
+    "5. Implement the 3615 NEWS service orchestration": [
+      {
+        "executionId": "63bf2eac-786f-4680-b267-62e838213efd",
+        "chatSessionId": "sess_05ffd0d7-3030-499f-a8ec-8943def4fb3e",
+        "timestamp": 1794610543368
+      },
+      {
+        "executionId": "63bf2eac-786f-4680-b267-62e838213efd",
+        "chatSessionId": "sess_05ffd0d7-3030-499f-a8ec-8943def4fb3e",
+        "timestamp": 1794610907368
+      }
+    ],
+    "6. Compose and register the production service": [
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611092515
+      },
+      {
+        "executionId": "d1b97663-04ca-453d-b887-2ebc3e2c2a91",
+        "chatSessionId": "sess_05d03606-8ac0-4441-883a-28a77667c29b",
+        "timestamp": 1794611602198
+      }
+    ],
+    "7. Add routing and HTTP integration coverage": [
+      {
+        "executionId": "af8460a1-4ed0-4d23-98b6-808aae6c67f1",
+        "chatSessionId": "sess_15900904-795d-498e-8aac-948c20136d15",
+        "timestamp": 1794611911291
+      },
+      {
+        "executionId": "af8460a1-4ed0-4d23-98b6-808aae6c67f1",
+        "chatSessionId": "sess_15900904-795d-498e-8aac-948c20136d15",
+        "timestamp": 1794612220072
+      }
+    ]
+  }
+}
