@@ -21,6 +21,7 @@ const PROCESSING_INSTRUCTION_PATTERN = /<\?[\s\S]*?(?:\?>|$)/gu;
 const DECLARATION_PATTERN = /<![^>]*(?:>|$)/gu;
 const CLOSING_MARKUP_PATTERN = /<\/[A-Za-z_][^<>]*>/gu;
 const OPENING_MARKUP_PATTERN = /<[A-Za-z_][^<>]*>/gu;
+const RESIDUAL_ANGLE_BRACKET_PATTERN = /[<>]/gu;
 const CHARACTER_REFERENCE_PATTERN = /&(#(?:x[\dA-F]+|\d+)|amp|apos|gt|lt|nbsp|quot);/giu;
 const DISALLOWED_CONTROL_PATTERN = /[\p{Cc}\u00ad\u061c\u200b\u200e\u200f\u202a-\u202e\u2060-\u2069\ufeff]/gu;
 
@@ -80,6 +81,7 @@ export function sanitizeExternalText(value: string): string {
     .replace(DECLARATION_PATTERN, ' ')
     .replace(CLOSING_MARKUP_PATTERN, '')
     .replace(OPENING_MARKUP_PATTERN, ' ')
+    .replace(RESIDUAL_ANGLE_BRACKET_PATTERN, ' ')
     .replace(DISALLOWED_CONTROL_PATTERN, ' ')
     .normalize('NFC')
     .replace(/\s+/gu, ' ')

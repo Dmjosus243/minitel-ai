@@ -148,7 +148,7 @@ This plan adds a dependency-injected RSS news service without changing the core 
     - Exercise both summary modes without a live RSS or AI request
     - _Requirements: 1.4, 3.6, 6.1, 6.5, 6.7, 6.8, 6.9, 7.1, 7.2, 7.4, 7.6_
 
-- [~] 8. Checkpoint - Validate the complete feature
+- [ ] 8. Checkpoint - Validate the complete feature
   - Run `npm run typecheck`, `npm test`, and `npm run build`
   - Verify every correctness-property test runs at least 100 cases and uses matching property numbers and requirement references
   - Verify no test contacts a live feed or AI endpoint
