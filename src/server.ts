@@ -1,6 +1,8 @@
+import { timingSafeEqual } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 
-import { Hono, type Context } from 'hono';
+import { Hono, type Context, type Next } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 
 import { getPageConfig, updatePageConfig } from './core/config';
 import { clearPageCache, formatText } from './core/formatter';
@@ -14,6 +16,9 @@ import type { Page } from './core/types';
 import { generateHomepage } from './services/home';
 
 const MENU_NUMBER_PATTERN = /^\d+$/u;
+const BEARER_PATTERN = /^Bearer\s+(.+)$/iu;
+const MAX_CONFIG_BODY_BYTES = 4 * 1024;
+const ADMIN_ERROR_MESSAGE = 'Administration token is missing or invalid.';
 const HOMEPAGE_TITLE = 'MINITEL IA';
 const HOMEPAGE_RETURN = "Retour à l'accueil";
 
@@ -81,6 +86,41 @@ export function pagesToPlainText(pages: readonly Page[]): string {
     .join('\n\n');
 }
 
+/** Compare le jeton reçu au secret attendu sans exposer d'information par le temps de réponse. */
+function isAuthorizedBearer(
+  authorization: string | undefined,
+  adminToken: string,
+): boolean {
+  const match = BEARER_PATTERN.exec(authorization ?? '');
+  const receivedToken = Buffer.from(match?.[1] ?? '', 'utf8');
+  const expectedToken = Buffer.from(adminToken, 'utf8');
+
+  if (receivedToken.length !== expectedToken.length) {
+    return false;
+  }
+
+  return timingSafeEqual(receivedToken, expectedToken);
+}
+
+/** Exige « Authorization: Bearer <ADMIN_TOKEN> » ; sans ADMIN_TOKEN configuré, la route refuse tout. */
+async function requireAdminToken(
+  context: Context,
+  next: Next,
+): Promise<Response | void> {
+  const adminToken = process.env.ADMIN_TOKEN;
+
+  if (
+    adminToken === undefined
+    || adminToken.trim() === ''
+    || !isAuthorizedBearer(context.req.header('Authorization'), adminToken)
+  ) {
+    return context.json({ error: ADMIN_ERROR_MESSAGE }, 403);
+  }
+
+  await next();
+  return undefined;
+}
+
 async function updateRuntimePageConfiguration(
   context: Context,
 ): Promise<Response> {
@@ -126,7 +166,18 @@ app.use('*', async (context, next) => {
 });
 
 app.get('/api/config', (context) => context.json(getPageConfig()));
-app.patch('/api/config', updateRuntimePageConfiguration);
+app.patch(
+  '/api/config',
+  requireAdminToken,
+  bodyLimit({
+    maxSize: MAX_CONFIG_BODY_BYTES,
+    onError: (context) => context.json(
+      { error: 'Request body must not exceed 4 KiB.' },
+      413,
+    ),
+  }),
+  updateRuntimePageConfiguration,
+);
 
 app.get('/', async (context) => {
   const pages = await pagesForQuery(context.req.query('q'));

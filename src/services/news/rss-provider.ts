@@ -92,6 +92,44 @@ function assertSafeHttpsUrl(url: URL): void {
   }
 }
 
+const IPV4_OCTET_PATTERN = /^\d{1,3}$/u;
+
+/** Identifie un hôte local, de boucle, privé ou de liaison locale interdit aux redirections. */
+function isPrivateOrLoopbackHostname(hostname: string): boolean {
+  const normalized = hostname.toLowerCase().replace(/\.$/u, '');
+
+  if (normalized === 'localhost' || normalized.endsWith('.localhost')) {
+    return true;
+  }
+
+  if (normalized.startsWith('[') && normalized.endsWith(']')) {
+    return normalized.slice(1, -1) === '::1';
+  }
+
+  const octets = normalized.split('.');
+  if (
+    octets.length === 4
+    && octets.every((octet) => IPV4_OCTET_PATTERN.test(octet))
+  ) {
+    const [first, second] = octets.map(Number);
+    return first === 127
+      || first === 10
+      || (first === 172 && second >= 16 && second <= 31)
+      || (first === 192 && second === 168)
+      || (first === 169 && second === 254);
+  }
+
+  return false;
+}
+
+/** Étend la vérification HTTPS aux hôtes internes refusés avant chaque saut de redirection. */
+function assertPublicHttpsUrl(url: URL): void {
+  assertSafeHttpsUrl(url);
+  if (isPrivateOrLoopbackHostname(url.hostname)) {
+    throw sourceError('redirect');
+  }
+}
+
 async function cancelResponseBody(response: Response): Promise<void> {
   try {
     await response.body?.cancel();
@@ -190,7 +228,7 @@ async function fetchBoundedRss(
 
       try {
         currentUrl = new URL(location, currentUrl);
-        assertSafeHttpsUrl(currentUrl);
+        assertPublicHttpsUrl(currentUrl);
       } catch {
         throw sourceError('redirect');
       }

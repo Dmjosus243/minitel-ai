@@ -264,6 +264,34 @@ describe('transport et fournisseur RSS bornés', () => {
   });
 
   it.each([
+    'https://localhost/feed.xml',
+    'https://sous.localhost/feed.xml',
+    'https://127.0.0.1/feed.xml',
+    'https://10.0.0.7/feed.xml',
+    'https://172.16.0.7/feed.xml',
+    'https://172.31.255.254/feed.xml',
+    'https://192.168.1.254/feed.xml',
+    'https://169.254.10.10/feed.xml',
+    'https://[::1]/feed.xml',
+  ])('refuse une redirection vers l’hôte privé ou local %s sans seconde requête', async (target) => {
+    const fetchImplementation = vi.fn<RssFetchImplementation>(async () => (
+      new Response(null, {
+        status: 302,
+        headers: { location: target },
+      })
+    ));
+    const transport = createBoundedRssTransport(fetchImplementation);
+
+    const error = await captureAsyncRssError(transport(RSS_URL, {
+      signal: new AbortController().signal,
+      maxBytes: 1_024,
+    }));
+
+    expect(error.kind).toBe('redirect');
+    expect(fetchImplementation).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([
     {
       expectedKind: 'status',
       response: () => new Response('corps confidentiel', {

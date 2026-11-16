@@ -1,4 +1,4 @@
-import { afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 import {
   getPageConfig,
@@ -107,6 +107,26 @@ describe('résilience du serveur', () => {
 });
 
 describe('API de configuration', () => {
+  const TEST_ADMIN_TOKEN = 'jeton-admin-test';
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  async function patchPageConfig(
+    body: string,
+    authorization?: string,
+  ): Promise<Response> {
+    return await app.request('/api/config', {
+      method: 'PATCH',
+      headers: {
+        ...(authorization === undefined ? {} : { authorization }),
+        'content-type': 'application/json',
+      },
+      body,
+    });
+  }
+
   it('retourne la configuration de page active', async () => {
     /** **Validates: Requirements 8.1** */
     const response = await app.request('/api/config');
@@ -115,13 +135,14 @@ describe('API de configuration', () => {
     await expect(response.json()).resolves.toEqual(INITIAL_PAGE_CONFIG);
   });
 
-  it('applique immédiatement une mise à jour partielle valide', async () => {
+  it('applique immédiatement une mise à jour partielle valide avec le jeton administrateur', async () => {
     /** **Validates: Requirements 8.1** */
-    const updateResponse = await app.request('/api/config', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ columns: 10, rows: 12 }),
-    });
+    vi.stubEnv('ADMIN_TOKEN', TEST_ADMIN_TOKEN);
+
+    const updateResponse = await patchPageConfig(
+      JSON.stringify({ columns: 10, rows: 12 }),
+      `Bearer ${TEST_ADMIN_TOKEN}`,
+    );
 
     expect(updateResponse.status).toBe(200);
     await expect(updateResponse.json()).resolves.toEqual({
@@ -138,16 +159,53 @@ describe('API de configuration', () => {
   });
 
   it('rejette une mise à jour invalide sans modifier la configuration', async () => {
-    const response = await app.request('/api/config', {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ columns: 0, rows: 12 }),
-    });
+    vi.stubEnv('ADMIN_TOKEN', TEST_ADMIN_TOKEN);
+
+    const response = await patchPageConfig(
+      JSON.stringify({ columns: 0, rows: 12 }),
+      `Bearer ${TEST_ADMIN_TOKEN}`,
+    );
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
       error: 'Page columns must be a positive integer.',
     });
+    expect(getPageConfig()).toEqual(INITIAL_PAGE_CONFIG);
+  });
+
+  it('répond 403 lorsque ADMIN_TOKEN n\'est pas défini', async () => {
+    delete process.env.ADMIN_TOKEN;
+
+    const response = await patchPageConfig(
+      JSON.stringify({ columns: 10, rows: 12 }),
+      `Bearer ${TEST_ADMIN_TOKEN}`,
+    );
+
+    expect(response.status).toBe(403);
+    expect(getPageConfig()).toEqual(INITIAL_PAGE_CONFIG);
+  });
+
+  it('répond 403 pour un jeton administrateur absent ou invalide', async () => {
+    vi.stubEnv('ADMIN_TOKEN', TEST_ADMIN_TOKEN);
+
+    const missingResponse = await patchPageConfig('{}');
+    const invalidResponse = await patchPageConfig('{}', 'Bearer mauvais-jeton');
+
+    expect(missingResponse.status).toBe(403);
+    expect(invalidResponse.status).toBe(403);
+    expect(getPageConfig()).toEqual(INITIAL_PAGE_CONFIG);
+  });
+
+  it('répond 413 lorsque le corps de la mise à jour dépasse 4 Kio', async () => {
+    vi.stubEnv('ADMIN_TOKEN', TEST_ADMIN_TOKEN);
+
+    const oversizedBody = JSON.stringify({ padding: 'x'.repeat(4 * 1024) });
+    const response = await patchPageConfig(
+      oversizedBody,
+      `Bearer ${TEST_ADMIN_TOKEN}`,
+    );
+
+    expect(response.status).toBe(413);
     expect(getPageConfig()).toEqual(INITIAL_PAGE_CONFIG);
   });
 });
